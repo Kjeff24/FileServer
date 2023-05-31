@@ -96,6 +96,12 @@ def loginPage(request):
 
     return render(request, "authenticate/login.html", context)
 
+
+# Logout User
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
+
 # activate user
 def activate_user(request, uidb64, token):
 

@@ -9,6 +9,13 @@
 </head>
 <body>
     <h1>Home page</h1>
+    
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'logout' %}">Logout</a>
+    <div>
+        <h1>You are authorized to view this page</h1>
+    </div>
+    {% else %}
     <ul>
         <li>
             <a href="{% url 'signup' %}">Signup</a>
@@ -17,10 +24,6 @@
             <a href="{% url 'login' %}">Login</a>
         </li>
     </ul>
-    {% if request.user.is_authenticated %}
-    <div>
-        <h1>You are authorized to view this page</h1>
-    </div>
     {% endif %}
 </body>
 </html>
