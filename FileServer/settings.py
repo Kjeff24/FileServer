@@ -1,5 +1,9 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+import sys
+
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,6 +16,8 @@ SECRET_KEY = "django-insecure-z9)k98=^+c+a*lo3q=46xb_#7$o8gt8x8lc_hkxs#&t3xx#0$a
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 ALLOWED_HOSTS = []
 
@@ -28,6 +34,8 @@ INSTALLED_APPS = [
     'myapp.apps.MyappConfig',
 
 ]
+
+AUTH_USER_MODEL  = 'myapp.User'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -117,6 +125,17 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = BASE_DIR / 'static/images'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Emailing settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM_USER = os.getenv('EMAIL_FROM_USER')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+PASSWORD_RESET_TIMEOUT = 14400
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
