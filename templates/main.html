@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Home page</h1>
+    
+    {% if request.user.is_authenticated %}
+    <form class="header__search" action="{% url 'home' %}" method="GET">
+        <input name="q" placeholder="Search for files..." />
+    </form>
+    <br>    
+
+    <a href="{% url 'logout' %}">Logout</a>
+    <div>
+        <h1>You are authorized to view this page</h1>
+    </div>
+    {% else %}
+    <ul>
+        <li>
+            <a href="{% url 'signup' %}">Signup</a>
+        </li>
+        <li>
+            <a href="{% url 'login' %}">Login</a>
+        </li>
+    </ul>
+    {% endif %}
+    {% block content %}
+    {% endblock %}
+
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

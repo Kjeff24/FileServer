@@ -1,0 +1,11 @@
+.view {
+    cursor: pointer;
+}
+
+.view-details {
+    display: none;
+}
+
+.view-details.active {
+    display: block;
+}

@@ -8,6 +8,8 @@ urlpatterns = [
     path('login/', user_management.loginPage, name='login'),
     path('logout/', user_management.logoutUser, name='logout'),
     path('activate-user/<uidb64>/<token>', user_management.activate_user, name='activate'),
+    path('file/<int:pk>/download/', homepage.downloadFile, name='increment_downloads'),
+    path('file/<int:pk>/send_email/', homepage.emailFile, name='increment_emails_sent'),
     
     path(
         'reset_password/', 

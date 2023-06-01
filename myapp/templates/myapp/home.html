@@ -1,29 +1,87 @@
-<!DOCTYPE html>
+{% extends "main.html" %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-<body>
-    <h1>Home page</h1>
-    
-    {% if request.user.is_authenticated %}
-    <a href="{% url 'logout' %}">Logout</a>
-    <div>
-        <h1>You are authorized to view this page</h1>
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="ui {{message.tags}} message">
+    {{message}}
     </div>
-    {% else %}
-    <ul>
-        <li>
-            <a href="{% url 'signup' %}">Signup</a>
-        </li>
-        <li>
-            <a href="{% url 'login' %}">Login</a>
-        </li>
-    </ul>
-    {% endif %}
-</body>
-</html>
+    {% endfor %}
+{% endif %}
+
+<!-- image files -->
+{% if image_files %}
+{% for file in image_files %}
+<div>
+    {{file.title}}
+    <a class="view">Preview</a>
+    <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}" download>Download</a>
+    <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
+    <div class="view-details">
+        <img src="{{ file.file.url }}" alt="File Preview" width="250px" height="250px">
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- audio files -->
+{% if audio_files %}
+{% for file in audio_files %}
+<div>
+    {{file.title}}
+    <a class="view">Preview</a>
+    <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}">Download</a>
+    <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
+    <div class="view-details">
+        <audio controls controlsList="nodownload noplaybackrate">
+            <source src="{{ file.file.url }}">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- video files -->
+{% if video_files %}
+{% for file in video_files %}
+<div>
+    {{file.title}}
+    <a class="view">Preview</a>
+    <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}">Download</a>
+    <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
+    <div class="view-details">
+        <video controls controlsList="nodownload noplaybackrate">
+            <source src="{{ file.file.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- pdf files -->
+{% if pdf_files %}
+{% for file in pdf_files %}
+    {{file.title}}
+    <a class="view">Preview</a>
+    <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}">Download</a>
+    <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
+    <div class="view-details">
+
+    </div>
+    <br>
+{% endfor %}
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/home.js' %}"></script>
+{% endblock %}
+    
