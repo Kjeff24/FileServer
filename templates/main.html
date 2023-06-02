@@ -1,40 +1,78 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <h1>Home page</h1>
+<html>
+    {% load static %}
+    <head>
+        <link
+            href="https://fonts.googleapis.com/css?family=Raleway:400, 600"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link rel="stylesheet" href="{% static 'css/style.css'  %}" />
+        <title>
+            {% block title %}
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+        <div class="home-container">
+            <div class="header">
+                <div class="header-container">
+                    <h3>Lizzy's File Server</h3>
+                    <form
+                            class="inputbox"
+                            action="{% url 'home' %}"
+                            method="GET"
+                        >
+                            <input
+                                placeholder="Searth for files......."
+                                type="text"
+                                name="q"
+                                class="input"
+                            />
+                        </form>
+                    <div>
+                        {% if not request.user.is_authenticated %}
+                        <ul class="header-links">
+                            <li>
+                                <a href="{% url 'signup' %}">Signup</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'login' %}">Login</a>
+                            </li>
+                        </ul>
+                        {% else %}
+                        <ul>
+                            <li>
+                                <a href="{% url 'logout' %}">Logout</a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </div>
+                        
     
-    {% if request.user.is_authenticated %}
-    <form class="header__search" action="{% url 'home' %}" method="GET">
-        <input name="q" placeholder="Search for files..." />
-    </form>
-    <br>    
-
-    <a href="{% url 'logout' %}">Logout</a>
-    <div>
-        <h1>You are authorized to view this page</h1>
-    </div>
-    {% else %}
-    <ul>
-        <li>
-            <a href="{% url 'signup' %}">Signup</a>
-        </li>
-        <li>
-            <a href="{% url 'login' %}">Login</a>
-        </li>
-    </ul>
-    {% endif %}
-    {% block content %}
-    {% endblock %}
-
-    {% block scripts %}
-    {% endblock %}
-</body>
+                </div>
+            </div>
+            <div class="jumbotron">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="ui {{message.tags}} message">
+                {{message}}
+                <a id="message_sent">ok</a>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <div class="main-container">
+                        {% block content %}
+                        {% endblock %}
+                </div>
+            </div> 
+            <div class="footer">
+                <div class="footer-container">
+                    <p>&copy; Lizzy 2023</p>
+                </div>
+            </div>
+        </div>
+        <script src="{% static 'js/main.js' %}"></script>
+        {% block scripts %}
+        {% endblock %}
+    </body>
 </html>

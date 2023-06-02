@@ -5,79 +5,132 @@
 {% endblock %}
 
 {% block content %}
-
-{% if messages %}
-    {% for message in messages %}
-    <div class="ui {{message.tags}} message">
-    {{message}}
-    </div>
-    {% endfor %}
+{% if not request.user.is_authenticated %}
+<p>NB: To download files or send files to email, you have to login</p>
+<br>
 {% endif %}
-
-<!-- image files -->
-{% if image_files %}
-{% for file in image_files %}
 <div>
-    {{file.title}}
-    <a class="view">Preview</a>
-    <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}" download>Download</a>
-    <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
-    <div class="view-details">
-        <img src="{{ file.file.url }}" alt="File Preview" width="250px" height="250px">
+    <!-- table images  -->
+    {% if image_files %}
+    <div class="table-container">
+        <h3>Images</h3> 
+        {% for file in image_files %}
+        <div class="file_item">
+            <p>Title: <span class="title">{{file.title}}</span></p>
+            <p>Description: {{file.description}}</p>
+            <div class="download_email_link">
+                <a class="view">Preview</a> 
+                {% if request.user.is_authenticated %}
+                <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}" download>Download</a>
+                {% endif %}
+                <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
+            </div>
+            <div class="view-details">
+                <img src="{{ file.file.url }}" alt="File Preview">
+            </div>
+        </div>
+        {% endfor %}
+        <br>
+        <hr>
     </div>
-</div>
-{% endfor %}
-{% endif %}
-
-<!-- audio files -->
-{% if audio_files %}
-{% for file in audio_files %}
-<div>
-    {{file.title}}
-    <a class="view">Preview</a>
-    <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}">Download</a>
-    <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
-    <div class="view-details">
-        <audio controls controlsList="nodownload noplaybackrate">
-            <source src="{{ file.file.url }}">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-</div>
-{% endfor %}
-{% endif %}
-
-<!-- video files -->
-{% if video_files %}
-{% for file in video_files %}
-<div>
-    {{file.title}}
-    <a class="view">Preview</a>
-    <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}">Download</a>
-    <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
-    <div class="view-details">
-        <video controls controlsList="nodownload noplaybackrate">
-            <source src="{{ file.file.url }}" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-    </div>
-</div>
-{% endfor %}
-{% endif %}
-
-<!-- pdf files -->
-{% if pdf_files %}
-{% for file in pdf_files %}
-    {{file.title}}
-    <a class="view">Preview</a>
-    <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}">Download</a>
-    <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
-    <div class="view-details">
-
-    </div>
+    {% else %}
+    <h3>No Images Available</h3>
+    <hr>
     <br>
-{% endfor %}
-{% endif %}
+    {% endif %}
+
+    <!-- table audio  -->
+    {% if audio_files %}
+    <div class="table-container">
+        <h3>Audios</h3>
+        {% for file in audio_files %}
+        <div class="file_item">
+            <p>Title: <span class="title">{{file.title}}</span></p>
+            <p>Description: {{file.description}}</p>
+            <div class="download_email_link">
+                <a class="view">Preview</a> 
+                {% if request.user.is_authenticated %}
+                <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}" download>Download</a> 
+                {% endif %}
+                <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
+            </div>
+            <div class="view-details">
+                <audio controls controlsList="nodownload noplaybackrate">
+                    <source src="{{ file.file.url }}">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+        {% endfor %}
+        <br>
+        <hr>
+    </div>
+    {% else %}
+    <h3>No Audio Available</h3>
+    <hr>
+    <br>
+    {% endif %}
+
+    <!-- table video  -->
+    {% if video_files %}
+    <div class="table-container">
+        <h3>Videos</h3>
+        {% for file in video_files %}
+        <div class="file_item">
+            <p>Title: <span class="title">{{file.title}}</span></p>
+            <p>Description: {{file.description}}</p>
+            <div class="download_email_link">
+                <a class="view">Preview</a> 
+                {% if request.user.is_authenticated %}
+                <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}" download>Download</a>
+                {% endif %}
+                <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
+            </div>
+            <div class="view-details">
+                <video controls controlsList="nodownload noplaybackrate">
+                    <source src="{{ file.file.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                    </video>
+            </div>
+        </div>
+        {% endfor %}
+        <br>
+        <hr>
+    </div>
+    {% else %}
+    <h3>No Videos Available</h3>
+    <hr>
+    <br>
+    {% endif %}
+
+    <!-- table pdf  -->
+    {% if pdf_files %}
+    <div class="table-container">
+        <h3>PDFs</h3>
+        {% for file in pdf_files %}
+        <div class="file_item">
+            <p>Title: <span class="title">{{file.title}}</span></p>
+            <p>Description: {{file.description}}</p>
+            <div class="download_email_link">
+                <a href="{{file.file.url}}" target="_blank" rel="noopener noreferrer">Preview</a> 
+                {% if request.user.is_authenticated %}
+                <a href="{{file.file.url}}" class="download-link" data-file-id="{{ file.id }}">Download</a>
+                {% endif %}
+                <a href="{% url 'increment_emails_sent' pk=file.id %}">Send file as Email</a>
+            </div>
+            <div class="view-details">
+            </div>
+        </div>
+        {% endfor %}
+        <br>
+        <hr>
+    </div>
+    {% else %}
+    <h3>No PDFs Available</h3>
+    <hr>
+    <br>
+    {% endif %}
+</div>
 
 {% endblock %}
 

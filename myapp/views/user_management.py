@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from myapp.forms import SignupForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -61,13 +60,13 @@ def signupPage(request):
 
     context = {'form': form, 'msg': msg}
 
-    return render(request, "authenticate/signup.html", context)
+    return render(request, "authenticate/login.html", context)
 
 
 # login page
 def loginPage(request):
     form = LoginForm(request.POST or None)
-    context = {'form': form}
+    context = {'form': form, 'page':'login'}
     
     if request.user.is_authenticated:
         return redirect('home')

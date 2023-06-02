@@ -1,25 +1,89 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    {% if messages %}
-    {% for message in messages %}
-    <div class="ui {{message.tags}} message">
-    {{message}}
-    </div>
-    {% endfor %}
-    {% endif %}
-    <h1>Login page</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Login</button>
-    </form>
-    <a href="{% url 'password_reset' %}">Forgot your password?</a>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>
+            {% if page == 'login' %}
+            Login
+            {% else %}
+            Signup
+            {% endif %}
+        </title>
+        <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+    </head>
+    <body>
+        <div class="container">
+            <h2 class="login-title">
+                {% if page == 'login' %}
+                Login to Lizzy's File Server
+                {% else %}
+                Signup to Lizzy's File Server
+                {% endif %}
+            </h2>
+            {% if messages %}
+                {% for message in messages %}
+                <div class="ui {{message.tags}} message">
+                {{message}}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" class="login-form">
+                {% csrf_token %}
+                <div>
+                    <label for="email">Email </label>
+                    {{form.email}}
+                </div>
+                {% if page == 'login' %}
+                <div>
+                    <label for="password">Password </label>
+                    {{form.password}}
+                </div>
+                {% else %}
+                <div>
+                    <label for="password1">Password </label>
+                    {{form.password1}}
+                </div>
+
+                <div>
+                    <label for="password2">Confirm Password </label>
+                    {{form.password2}}
+                </div>
+                {% endif %}
+                <div class="show-password">
+                    Show Password
+                    <label class="check-password">
+                        <input type="checkbox" id="showPasswordToggle" />
+                    </label>
+                </div>
+                <button class="btn btn--form" type="submit">
+                    {% if page == 'login' %}
+                    Login
+                    {% else %}
+                    Signup
+                    {% endif %}
+                </button>
+                {% if page == 'login' %}
+                <a class="login_link" href="{% url 'password_reset' %}">Forgot your password?</a>
+                <a class="login_link" href="{% url 'signup' %}">Signup</a>
+                {% else %}
+                <a class="login_link" href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </form>
+        </div>
+        <script>
+            const toggleablePasswords = document.querySelectorAll( ".toggleable-password");
+            const showPasswordToggle = document.getElementById("showPasswordToggle");
+
+            showPasswordToggle.addEventListener("change", function () {
+                const isChecked = showPasswordToggle.checked;
+                toggleablePasswords.forEach(function (passwordField) {
+                    passwordField.type = isChecked ? "text" : "password";
+                });
+            });
+        </script>
+    </body>
 </html>

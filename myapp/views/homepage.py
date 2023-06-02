@@ -8,10 +8,11 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 import mimetypes
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 # Home page
 
-
+# @login_required(login_url='login')
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
@@ -44,8 +45,6 @@ def home(request):
         file_type='video'
     )
     
-    print(pdf_files)
-
     context = {
         'pdf_files': pdf_files,
         'image_files': image_files,
@@ -55,14 +54,17 @@ def home(request):
     return render(request, "myapp/home.html", context)
 
 
+@login_required(login_url='login')
 def downloadFile(request, pk):
     file_obj = File.objects.get(id=pk)
     print("download successfull")
     file_obj.downloads_count()
+    
     messages.success(request, 'Download successfully.')
     return redirect('home')
 
 
+@login_required(login_url='login')
 def emailFile(request, pk):
     user = request.user
     # Retrieve the file object

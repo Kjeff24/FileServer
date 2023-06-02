@@ -15,16 +15,14 @@ class SignupForm(UserCreationForm):
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "class": "input-text",
-                "id":"passwordField1"
+                "class": "toggleable-password",
             }
         )
     )
     password2 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "class": "input-text",
-                "id":"passwordField2"
+                "class": "toggleable-password",
             }
         )
     )
@@ -46,8 +44,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "class": "login-input",
-                "id":"passwordField",
+                "class": "toggleable-password",
                 "autocomplete":"password",
                 "placeholder": "Enter your password",
             }
