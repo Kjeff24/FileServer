@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import FileResponse
 from myapp.models import File
+from urllib.parse import urlencode
+from urllib.parse import quote
+from django.core.files.storage import FileSystemStorage
 from django.core.mail import EmailMessage
 from django.conf import settings
 import threading
@@ -13,38 +16,44 @@ from django.contrib.auth.decorators import login_required
 # Home page
 
 # @login_required(login_url='login')
+
+
 def home(request):
+    
+    # retrieves a query parameter value from an HTTP GET request
     q = request.GET.get('q') if request.GET.get('q') != None else ''
+    
+    # Q filters object that can be encapsulated logically
 
     pdf_files = File.objects.filter(
-        Q(title__icontains=q) | 
-        Q(description__icontains=q) | 
-        Q(file__icontains=q) | 
+        Q(title__icontains=q) |
+        Q(description__icontains=q) |
+        Q(file__icontains=q) |
         Q(file_type__icontains=q),
         file_type='pdf'
     )
     image_files = File.objects.filter(
-        Q(title__icontains=q) | 
-        Q(description__icontains=q) | 
-        Q(file__icontains=q) | 
+        Q(title__icontains=q) |
+        Q(description__icontains=q) |
+        Q(file__icontains=q) |
         Q(file_type__icontains=q),
         file_type='image'
     )
     audio_files = File.objects.filter(
-        Q(title__icontains=q) | 
-        Q(description__icontains=q) | 
-        Q(file__icontains=q) | 
+        Q(title__icontains=q) |
+        Q(description__icontains=q) |
+        Q(file__icontains=q) |
         Q(file_type__icontains=q),
         file_type='audio'
     )
     video_files = File.objects.filter(
-        Q(title__icontains=q) | 
-        Q(description__icontains=q) | 
-        Q(file__icontains=q) | 
+        Q(title__icontains=q) |
+        Q(description__icontains=q) |
+        Q(file__icontains=q) |
         Q(file_type__icontains=q),
         file_type='video'
     )
-    
+
     context = {
         'pdf_files': pdf_files,
         'image_files': image_files,
@@ -56,12 +65,23 @@ def home(request):
 
 @login_required(login_url='login')
 def downloadFile(request, pk):
-    file_obj = File.objects.get(id=pk)
-    print("download successfull")
-    file_obj.downloads_count()
+    file = File.objects.get(id=pk)
     
+    # increase number of downloads of a particular
+    file.downloads_count()
     messages.success(request, 'Download successfully.')
     return redirect('home')
+
+
+# allows the email to be sent asynchronously while the main program continues to execute.
+class EmailThread(threading.Thread):
+
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email.send()
 
 
 @login_required(login_url='login')
@@ -79,13 +99,19 @@ def emailFile(request, pk):
         to=[user.email]
     )
 
-    # Attach the file to the email
+    # Open the file in binary mode and read only
     with open(file_obj.file.path, 'rb') as f:
         file_content = f.read()
+        
+        # Guess the content type of the file based on it's extension
+        # Disregard the encoding part using the underscore
         content_type, _ = mimetypes.guess_type(file_obj.file.path)
+        print(f'{content_type} -- content tupes')
+        
+        # Attach the file to the email
         email.attach(file_obj.file.name, file_content, content_type)
 
-    # Send the email
+    # Send the email using a different process other than the main program execution
     if not settings.TESTING:
         EmailThread(email).start()
 
@@ -95,11 +121,15 @@ def emailFile(request, pk):
     return redirect('home')
 
 
-class EmailThread(threading.Thread):
-
-    def __init__(self, email):
-        self.email = email
-        threading.Thread.__init__(self)
-
-    def run(self):
-        self.email.send()
+# Preview PDF by sending files as httpresponse
+def previewPdf(request, pk):
+    file = File.objects.get(id=pk)
+    
+    # open the file in binary mode and read only
+    response = FileResponse(open(file.file.path, 'rb'),
+                            content_type='application/pdf')
+    
+    # Display file in a browser and handle special characters using urlencode
+    response['Content-Disposition'] = 'inline; filename="{}"'.format(
+        urlencode({'': file.file.name}))
+    return response

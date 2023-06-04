@@ -28,6 +28,7 @@
                                 name="q"
                                 class="input"
                             />
+                            <button>Go</button>
                         </form>
                     <div>
                         {% if not request.user.is_authenticated %}
@@ -40,7 +41,10 @@
                             </li>
                         </ul>
                         {% else %}
-                        <ul>
+                        <ul class="header-other-links">
+                            <li>
+                                <a href="{% url 'home' %}">Home</a>
+                            </li>
                             <li>
                                 <a href="{% url 'logout' %}">Logout</a>
                             </li>
@@ -56,13 +60,13 @@
                 {% for message in messages %}
                 <div class="ui {{message.tags}} message">
                 {{message}}
-                <a id="message_sent">ok</a>
+                <a class="message_sent">ok</a>
                 </div>
                 {% endfor %}
                 {% endif %}
                 <div class="main-container">
-                        {% block content %}
-                        {% endblock %}
+                    {% block content %}
+                    {% endblock %}
                 </div>
             </div> 
             <div class="footer">

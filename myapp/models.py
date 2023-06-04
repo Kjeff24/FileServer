@@ -35,10 +35,12 @@ class File(models.Model):
     def __str__(self):
         return self.title
     
+    # counts the number of downloads
     def downloads_count(self):
         self.downloads += 1
         self.save()
 
+    # counts the number of email sent
     def emails_sent_count(self):
         self.emails_sent += 1
         self.save()

@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import User
 
 
+# inherit UserCreationForm to create SignupForm
 class SignupForm(UserCreationForm):
     email = forms.EmailField(
         widget=forms.EmailInput(
@@ -31,6 +32,7 @@ class SignupForm(UserCreationForm):
         fields = ['email', 'password1', 'password2']
         
 
+# create a login form
 class LoginForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(

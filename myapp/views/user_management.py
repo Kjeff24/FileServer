@@ -13,37 +13,11 @@ from myapp.tokens import account_activation_token
 from myapp.models import User
 from django.urls import reverse
 
-class EmailThread(threading.Thread):
-
-    def __init__(self, email):
-        self.email = email
-        threading.Thread.__init__(self)
-
-    def run(self):
-        self.email.send()
-
-
-def send_activation_email(user, request):
-    current_site = get_current_site(request)
-    email_subject = 'Activate your account'
-    email_body = render_to_string('authenticate/activate.html', {
-        'user': user,
-        'domain': current_site,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_activation_token.make_token(user)
-    })
-
-    email = EmailMessage(subject=email_subject, body=email_body,
-                         from_email=settings.EMAIL_FROM_USER,
-                         to=[user.email]
-                         )
-
-    if not settings.TESTING:
-        EmailThread(email).start()
-
 # Signup page
 def signupPage(request):
     msg = None
+    
+    # saves form and send activation code, then redirect to login
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -68,9 +42,11 @@ def loginPage(request):
     form = LoginForm(request.POST or None)
     context = {'form': form, 'page':'login'}
     
+    # if user is authenticated, redirect to home, when user tries to access login
     if request.user.is_authenticated:
         return redirect('home')
     
+    # Check if user is authenticated before login to home
     if request.method == 'POST':
         if form.is_valid():
             email = form.cleaned_data.get('email')
@@ -101,9 +77,45 @@ def logoutUser(request):
     logout(request)
     return redirect('login')
 
+
+# allows the email to be sent asynchronously while the main program continues to execute.
+class EmailThread(threading.Thread):
+
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email.send()
+
+# sends activation code to the email
+def send_activation_email(user, request):
+    current_site = get_current_site(request)
+    email_subject = 'Activate your account'
+    
+    # render a template file and pass in context
+    email_body = render_to_string('authenticate/activate.html', {
+        'user': user,
+        'domain': current_site,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user)
+    })
+
+    # create an email from using EmailMessage()
+    email = EmailMessage(subject=email_subject, body=email_body,
+                         from_email=settings.EMAIL_FROM_USER,
+                         to=[user.email]
+                         )
+
+    # creates a different process for email other than the main program process
+    if not settings.TESTING:
+        EmailThread(email).start()
+
+
 # activate user
 def activate_user(request, uidb64, token):
 
+    # decode uid64 back to the user id, and get the user
     try:
         uid = force_str (urlsafe_base64_decode(uidb64))
 
@@ -112,6 +124,7 @@ def activate_user(request, uidb64, token):
     except Exception as e:
         user = None
 
+    # checks the user and token with the token generated from token.py   
     if user and account_activation_token.check_token(user, token):
         user.is_email_verified = True
         user.save()
