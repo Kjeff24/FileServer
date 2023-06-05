@@ -17,7 +17,8 @@ SECRET_KEY = "django-insecure-z9)k98=^+c+a*lo3q=46xb_#7$o8gt8x8lc_hkxs#&t3xx#0$a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','wellnesspharma.herokuapp.com']
+ALLOWED_HOSTS = ['*']
+
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
@@ -41,7 +42,6 @@ AUTH_USER_MODEL  = 'myapp.User'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -138,7 +138,7 @@ EMAIL_HOST_PASSWORD = 'lqdjthmknkdnbgvj'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-PASSWORD_RESET_TIMEOUT = 14400
+PASSWORD_RESET_TIMEOUT = 600
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
