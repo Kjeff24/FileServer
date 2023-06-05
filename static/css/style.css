@@ -107,20 +107,16 @@ ul li a:hover{
 }
 
 .jumbotron {
-    min-height: 70vh;
+    min-height: 90vh;
     /* display: flex; */
 }
 
 .main-container{
     user-select: none;
     padding:20px;
-    /* background-color: bisque; */
     overflow-y: auto;
-    /* height: 80vh; */
-    max-height: 85vh;
-    /* border-radius: 50px; */
+    max-height: 80vh;
     background: #00aeff77;
-    /* background: linear-gradient(180deg, #79797985 0%, #68686881 100%); */
     box-shadow:  12px 12px 24px #bebebe,
 }
 
