@@ -2,6 +2,19 @@
 
 This is a file server project to enable the owner to share files
 
+## Customer Requirements
+### Your users should be able to:
+1. Signup & log in with an email and password with account verification. There should be a
+reset password feature to recover lost passwords password.
+2. See a feed page that contains a list of files that can be downloaded.
+3. Search the file server.
+4. Preview files (PDF, IMAGES, AUDIO, VIDEOS)
+5. Send a file to an email through the platform.
+
+### Admin
+1. Should be able to upload files with a title and description
+2. Should be able to see the number of downloads and number of emails sent for each file
+
 ## Installation
 
 To install the project, you need to have Python 3 and pip installed on your system. Then, follow these steps:
