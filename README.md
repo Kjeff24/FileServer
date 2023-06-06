@@ -87,6 +87,9 @@ The project provides the following endpoints:
 ### home
 ![Alt text](static/assets/preview_images/home.png)
 
+### home (not logged in)
+![Alt text](static/assets/preview_images/home_not_login.png)
+
 ### login
 ![Alt text](static/assets/preview_images/login.png)
 
@@ -105,6 +108,5 @@ The project provides the following endpoints:
 ### password reset complete
 ![Alt text](static/assets/preview_images/password%20reset%20complete.png)
 
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for more details.
+### page unavailable
+![Alt text](static/assets/preview_images/pageUnavailable.png)

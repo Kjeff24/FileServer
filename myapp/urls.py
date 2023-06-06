@@ -1,8 +1,11 @@
-from django.urls import path
+from django.urls import path, re_path
 from django.contrib.auth import views as auth_views
 from .views import homepage, user_management
+from django.http import Http404
+
 
 urlpatterns = [
+    
     path('', homepage.home, name='home'),
     path('signup/', user_management.signupPage, name='signup'),
     path('login/', user_management.loginPage, name='login'),
@@ -30,5 +33,5 @@ urlpatterns = [
         auth_views.PasswordResetCompleteView.as_view(template_name="password/password_reset_done.html"), 
         name='password_reset_complete'),
     
-    
+    re_path(r'^.*/$', homepage.custom_404),
 ]

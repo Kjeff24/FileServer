@@ -141,3 +141,8 @@ def previewPdf(request, pk):
     response['Content-Disposition'] = 'inline; filename="{}"'.format(
         urlencode({'': file.file.name}))
     return response
+
+
+# url does not exist
+def custom_404(request):
+    return render(request, 'myapp/404.html', status=404)
