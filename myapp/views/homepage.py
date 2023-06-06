@@ -3,7 +3,6 @@ from django.http import FileResponse
 from myapp.models import File
 from urllib.parse import urlencode
 from urllib.parse import quote
-from django.core.files.storage import FileSystemStorage
 from django.core.mail import EmailMessage
 from django.conf import settings
 import threading
@@ -12,6 +11,7 @@ from django.contrib import messages
 import mimetypes
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.http import StreamingHttpResponse
 
 # Home page
 
@@ -31,28 +31,31 @@ def home(request):
         Q(file__icontains=q) |
         Q(file_type__icontains=q),
         file_type='pdf'
-    )
+    ).order_by('-created')
+    
     image_files = File.objects.filter(
         Q(title__icontains=q) |
         Q(description__icontains=q) |
         Q(file__icontains=q) |
         Q(file_type__icontains=q),
         file_type='image'
-    )
+    ).order_by('-created')
+    
     audio_files = File.objects.filter(
         Q(title__icontains=q) |
         Q(description__icontains=q) |
         Q(file__icontains=q) |
         Q(file_type__icontains=q),
         file_type='audio'
-    )
+    ).order_by('-created')
+    
     video_files = File.objects.filter(
         Q(title__icontains=q) |
         Q(description__icontains=q) |
         Q(file__icontains=q) |
         Q(file_type__icontains=q),
         file_type='video'
-    )
+    ).order_by('-created')
 
     context = {
         'pdf_files': pdf_files,
@@ -122,14 +125,19 @@ def emailFile(request, pk):
 
 
 # Preview PDF by sending files as httpresponse
+
 def previewPdf(request, pk):
     file = File.objects.get(id=pk)
-    
-    # open the file in binary mode and read only
-    response = FileResponse(open(file.file.path, 'rb'),
-                            content_type='application/pdf')
-    
-    # Display file in a browser and handle special characters using urlencode
+
+    # pdf is streamed in chunks, rather than loading entire file
+    def file_iterator():
+        with open(file.file.path, 'rb') as f:
+            for chunk in iter(lambda: f.read(8192), b''):
+                yield chunk
+                
+    # use StreamingHttpResponse to load pdf content
+    response = StreamingHttpResponse(
+        file_iterator(), content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="{}"'.format(
         urlencode({'': file.file.name}))
     return response

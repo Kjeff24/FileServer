@@ -8,22 +8,25 @@ class SignupForm(UserCreationForm):
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
-                "class": "input-text",
+                "class": "input-text form-control",
                 "autocomplete":"email",
+                'id':"floatingInput",
             }
         )
     )
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "class": "toggleable-password",
+                "class": "toggleable-password form-control",
+                'id':"floatingInput1",
             }
         )
     )
     password2 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "class": "toggleable-password",
+                "class": "toggleable-password form-control",
+                'id':"floatingInput2",
             }
         )
     )
@@ -37,8 +40,9 @@ class LoginForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
-                "class": "input-text",
+                "class": "input-text form-control",
                 "autocomplete":"email",
+                'id':"floatingInput",
             }
         )
     )
@@ -46,9 +50,10 @@ class LoginForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "class": "toggleable-password",
+                "class": "toggleable-password form-control",
                 "autocomplete":"password",
                 "placeholder": "Enter your password",
+                "id":"floatingPassword",
             }
         )
     )

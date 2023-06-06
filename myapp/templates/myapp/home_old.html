@@ -1,0 +1,170 @@
+{% extends "main.html" %} {% load static %} {% block title %} Home {% endblock%} 
+{% block content %} {% if not request.user.is_authenticated %}
+<p>NB: To download files or send files to email, you have to login</p>
+<br />
+{% endif %}
+<div>
+    <!-- table images  -->
+    {% if image_files %}
+    <div class="table-container">
+        <h3>Images</h3>
+        {% for file in image_files %}
+        <div class="file_item">
+            <p>Title: <span class="title">{{file.title}}</span></p>
+            <p>Description: {{file.description}}</p>
+            <div class="download_email_link">
+                <a class="view">Preview</a>
+                {% if request.user.is_authenticated %}
+                <a
+                    href="{{file.file.url}}"
+                    class="download-link"
+                    data-file-id="{{ file.id }}"
+                    download
+                    >Download</a
+                >
+                {% endif %}
+                <a href="{% url 'increment_emails_sent' pk=file.id %}"
+                    >Send file as Email</a
+                >
+            </div>
+            <div class="view-details">
+                <div class="img">
+                    <img src="{{ file.file.url }}" alt="File Preview" />
+                    <br>
+                    <p>
+                        <a href="{{ file.file.url }}" target="_blank">View Full Size</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <br />
+        <hr />
+    </div>
+    {% else %}
+    <h3>No Images Available</h3>
+    <hr />
+    <br />
+    {% endif %}
+
+    <!-- table audio  -->
+    {% if audio_files %}
+    <div class="table-container">
+        <h3>Audios</h3>
+        {% for file in audio_files %}
+        <div class="file_item">
+            <p>Title: <span class="title">{{file.title}}</span></p>
+            <p>Description: {{file.description}}</p>
+            <div class="download_email_link">
+                <a class="view">Preview</a>
+                {% if request.user.is_authenticated %}
+                <a
+                    href="{{file.file.url}}"
+                    class="download-link"
+                    data-file-id="{{ file.id }}"
+                    download
+                    >Download</a
+                >
+                {% endif %}
+                <a href="{% url 'increment_emails_sent' pk=file.id %}"
+                    >Send file as Email</a
+                >
+            </div>
+            <div class="view-details">
+                <audio controls controlsList="nodownload noplaybackrate">
+                    <source src="{{ file.file.url }}" />
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+        {% endfor %}
+        <br />
+        <hr />
+    </div>
+    {% else %}
+    <h3>No Audio Available</h3>
+    <hr />
+    <br />
+    {% endif %}
+
+    <!-- table video  -->
+    {% if video_files %}
+    <div class="table-container">
+        <h3>Videos</h3>
+        {% for file in video_files %}
+        <div class="file_item">
+            <p>Title: <span class="title">{{file.title}}</span></p>
+            <p>Description: {{file.description}}</p>
+            <div class="download_email_link">
+                <a class="view">Preview</a>
+                {% if request.user.is_authenticated %}
+                <a
+                    href="{{file.file.url}}"
+                    class="download-link"
+                    data-file-id="{{ file.id }}"
+                    download
+                    >Download</a
+                >
+                {% endif %}
+                <a href="{% url 'increment_emails_sent' pk=file.id %}"
+                    >Send file as Email</a
+                >
+            </div>
+            <div class="view-details">
+                <video controls controlsList="nodownload noplaybackrate">
+                    <source src="{{ file.file.url }}" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+        {% endfor %}
+        <br />
+        <hr />
+    </div>
+    {% else %}
+    <h3>No Videos Available</h3>
+    <hr />
+    <br />
+    {% endif %}
+
+    <!-- table pdf  -->
+    {% if pdf_files %}
+    <div class="table-container">
+        <h3>PDFs</h3>
+        {% for file in pdf_files %}
+        <div class="file_item">
+            <p>Title: <span class="title">{{file.title}}</span></p>
+            <p>Description: {{file.description}}</p>
+            <div class="download_email_link">
+                <a href="{% url 'preview_pdf' file.id %}#toolbar=0" target="_blank">Preview</a>
+                {% if request.user.is_authenticated %}
+                <a
+                    href="{{file.file.url}}"
+                    class="download-link"
+                    data-file-id="{{ file.id }}"
+                    target="_blank"
+                    download
+                    >Download</a
+                >
+                {% endif %}
+                <a href="{% url 'increment_emails_sent' pk=file.id %}"
+                    >Send file as Email</a
+                >
+            </div>
+        </div>
+        {% endfor %}
+        <br />
+        <hr />
+    </div>
+    {% else %}
+    <h3>No PDFs Available</h3>
+    <hr />
+    <br />
+    {% endif %}
+</div>
+
+{% endblock %} 
+
+{% block scripts %}
+<script src="{% static 'js/home.js' %}"></script>
+{% endblock %}
