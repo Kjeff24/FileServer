@@ -9,21 +9,7 @@
 
 .home-container{
     background-color: #9a616d;
-    color: white
-}
-
-.message{
-    text-align: center;
-    padding: 10px;
-    background-color: white;
-    color: rgb(53, 199, 102);
-    border-radius: 10px;
-}
-.message a{
-    padding: 2px;
-    border: 1px solid black;
-    color: black;
-    cursor: pointer;
+    color: white;
 }
 
 .message.active{
@@ -37,7 +23,7 @@
 
 .main-container{
     user-select: none;
-    padding:20px;
+    padding:10px;
     overflow-y: auto;
     max-height: 80vh;
     box-shadow:  12px 12px 24px #bebebe,
@@ -54,7 +40,7 @@
 }
 
 .table-container{
-    margin-bottom: 20px
+    padding:5px;
 }
 
 .file_item{
