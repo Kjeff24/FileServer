@@ -48,3 +48,21 @@ class File(models.Model):
     def emails_sent_count(self):
         self.emails_sent += 1
         self.save()
+
+
+# Get number of downloads and email sent from a user
+class UserActivities(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_download_count = models.PositiveIntegerField(default=0)
+    user_email_sent = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.user.email
+
+    def download_count(self):
+        self.user_download_count += 1
+        self.save()
+
+    def email_count(self):
+        self.user_email_sent += 1
+        self.save()
